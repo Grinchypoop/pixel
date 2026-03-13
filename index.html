@@ -659,6 +659,11 @@
     // Each entry: { name, url, uploading }
     const files = [];
 
+    // Unique folder per visitor session: pixel-submissions/NAME_TIMESTAMP
+    // Folder is finalised at submit time; use a temp session ID until then
+    const sessionId = Math.random().toString(36).slice(2, 10);
+    let uploadFolder = `pixel-submissions/${sessionId}`;
+
     document.getElementById('heroFileInput').addEventListener('change', function () {
       [...this.files].forEach(f => {
         if (!files.find(x => x.name === f.name)) {
@@ -674,15 +679,16 @@
       const form = new FormData();
       form.append('file', file);
       form.append('upload_preset', CLOUDINARY_PRESET);
+      form.append('folder', uploadFolder);
       try {
         const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
           method: 'POST', body: form,
         });
         const data = await res.json();
-        entry.url      = data.secure_url;
+        entry.url       = data.secure_url;
         entry.uploading = false;
       } catch {
-        entry.url      = 'upload-failed';
+        entry.url       = 'upload-failed';
         entry.uploading = false;
       }
       renderTags();
@@ -735,15 +741,20 @@
       btn.textContent = 'Submitting…';
 
       try {
+        const name  = document.getElementById('f-name').value.trim();
+        const slug  = name.toLowerCase().replace(/\s+/g, '_') + '_' + sessionId;
+        const folderLink = `https://console.cloudinary.com/console/media_library/folders/pixel-submissions/${slug}`;
+
         const payload = {
           access_key:      WEB3FORMS_KEY,
-          subject:         'New Pixel Stack Waitlist Signup',
-          name:            document.getElementById('f-name').value.trim(),
+          subject:         `New Pixel Stack Waitlist — ${name}`,
+          name,
           email:           document.getElementById('f-email').value.trim(),
           phone:           document.getElementById('f-phone').value.trim(),
           github:          document.getElementById('f-github').value.trim(),
           'design links':  links.join(', ') || 'None',
           screenshots:     files.filter(f => f.url && f.url !== 'upload-failed').map(f => f.url).join('\n') || 'None',
+          'cloudinary folder': files.length ? folderLink : 'No images uploaded',
         };
 
         const res  = await fetch('https://api.web3forms.com/submit', {

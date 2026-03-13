@@ -734,39 +734,43 @@
       btn.disabled = true;
       btn.textContent = 'Submitting…';
 
-      const payload = {
-        access_key:   WEB3FORMS_KEY,
-        subject:      'New Pixel Stack Waitlist Signup',
-        name:         document.getElementById('f-name').value.trim(),
-        email:        document.getElementById('f-email').value.trim(),
-        phone:        document.getElementById('f-phone').value.trim(),
-        github:       document.getElementById('f-github').value.trim(),
-        'design links': links.join(', ') || 'None',
-        screenshots:    files.filter(f => f.url && f.url !== 'upload-failed').map(f => f.url).join('\n') || 'None',
-      };
+      try {
+        const payload = {
+          access_key:      WEB3FORMS_KEY,
+          subject:         'New Pixel Stack Waitlist Signup',
+          name:            document.getElementById('f-name').value.trim(),
+          email:           document.getElementById('f-email').value.trim(),
+          phone:           document.getElementById('f-phone').value.trim(),
+          github:          document.getElementById('f-github').value.trim(),
+          'design links':  links.join(', ') || 'None',
+          screenshots:     files.filter(f => f.url && f.url !== 'upload-failed').map(f => f.url).join('\n') || 'None',
+        };
 
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+        const res  = await fetch('https://api.web3forms.com/submit', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload),
+        });
+        const json = await res.json();
 
-      if (res.ok) {
-        document.getElementById('successOverlay').classList.add('show');
-        // spinner shows for 3s, then fades out and title appears
-        setTimeout(() => {
-          document.getElementById('successSpinner').classList.add('hide');
+        if (res.ok && json.success) {
+          document.getElementById('successOverlay').classList.add('show');
           setTimeout(() => {
-            document.getElementById('successTitle').classList.add('show');
+            document.getElementById('successSpinner').classList.add('hide');
             setTimeout(() => {
-              document.getElementById('successSub').classList.add('show');
-            }, 300);
-          }, 400);
-        }, 3000);
-      } else {
+              document.getElementById('successTitle').classList.add('show');
+              setTimeout(() => {
+                document.getElementById('successSub').classList.add('show');
+              }, 300);
+            }, 400);
+          }, 3000);
+        } else {
+          throw new Error(json.message || 'Submission failed');
+        }
+      } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Join Waitlist';
-        alert('Something went wrong — please try again.');
+        alert('Error: ' + err.message + '\n\nPlease check your internet connection and try again.');
       }
     });
   </script>

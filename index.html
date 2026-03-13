@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Stack — Waitlist</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: #fdf8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 24px;
+    }
+
+    /* ════════════════════════════
+       HERO
+    ════════════════════════════ */
+    .hero {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    /* ── Ghost + Heading ── */
+    .greeting {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .greeting h1 {
+      font-size: 38px;
+      font-weight: 700;
+      color: #1a0533;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .ghost-wrap {
+      width: 44px; height: 44px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: visible;
+    }
+
+    #ghost {
+      position: absolute; top: 0; left: 0;
+      transform: scale(0.31);
+      transform-origin: top left;
+    }
+
+    #red {
+      animation: upNDown .5s infinite;
+      position: relative;
+      width: 140px; height: 140px;
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      grid-template-rows: repeat(14, 1fr);
+      grid-template-areas:
+        "a1  a2  a3  a4  a5  top0 top0 top0 top0 a10 a11 a12 a13 a14"
+        "b1  b2  b3  top1 top1 top1 top1 top1 top1 top1 top1 b12 b13 b14"
+        "c1 c2 top2 top2 top2 top2 top2 top2 top2 top2 top2 top2 c13 c14"
+        "d1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 d14"
+        "e1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 e14"
+        "f1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 f14"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "st0 st0 an4 st1 an7 st2 an10 an10 st3 an13 st4 an16 st5 st5"
+        "an1 an2 an3 an5 an6 an8 an9 an9 an11 an12 an14 an15 an17 an18";
+    }
+
+    @keyframes upNDown {
+      0%,49%  { transform:translateY(0);    }
+      50%,100%{ transform:translateY(-10px);}
+    }
+
+    #top0,#top1,#top2,#top3,#top4,#st0,#st1,#st2,#st3,#st4,#st5{background-color:#7c3aed}
+    #top0{grid-area:top0}#top1{grid-area:top1}#top2{grid-area:top2}
+    #top3{grid-area:top3}#top4{grid-area:top4}
+    #st0{grid-area:st0}#st1{grid-area:st1}#st2{grid-area:st2}
+    #st3{grid-area:st3}#st4{grid-area:st4}#st5{grid-area:st5}
+    #an1 {grid-area:an1; animation:flicker0 .5s infinite}
+    #an18{grid-area:an18;animation:flicker0 .5s infinite}
+    #an2 {grid-area:an2; animation:flicker1 .5s infinite}
+    #an17{grid-area:an17;animation:flicker1 .5s infinite}
+    #an3 {grid-area:an3; animation:flicker1 .5s infinite}
+    #an16{grid-area:an16;animation:flicker1 .5s infinite}
+    #an4 {grid-area:an4; animation:flicker1 .5s infinite}
+    #an15{grid-area:an15;animation:flicker1 .5s infinite}
+    #an6 {grid-area:an6; animation:flicker0 .5s infinite}
+    #an12{grid-area:an12;animation:flicker0 .5s infinite}
+    #an7 {grid-area:an7; animation:flicker0 .5s infinite}
+    #an13{grid-area:an13;animation:flicker0 .5s infinite}
+    #an9 {grid-area:an9; animation:flicker1 .5s infinite}
+    #an10{grid-area:an10;animation:flicker1 .5s infinite}
+    #an8 {grid-area:an8; animation:flicker0 .5s infinite}
+    #an11{grid-area:an11;animation:flicker0 .5s infinite}
+    @keyframes flicker0{0%,49%{background-color:#7c3aed}50%,100%{background-color:transparent}}
+    @keyframes flicker1{0%,49%{background-color:transparent}50%,100%{background-color:#7c3aed}}
+
+    #eye {width:40px;height:50px;position:absolute;top:30px;left:10px}
+    #eye::before{content:"";background:white;width:20px;height:50px;transform:translateX(10px);display:block;position:absolute}
+    #eye::after {content:"";background:white;width:40px;height:30px;transform:translateY(10px);display:block;position:absolute}
+    #eye1{width:40px;height:50px;position:absolute;top:30px;right:30px}
+    #eye1::before{content:"";background:white;width:20px;height:50px;transform:translateX(10px);display:block;position:absolute}
+    #eye1::after {content:"";background:white;width:40px;height:30px;transform:translateY(10px);display:block;position:absolute}
+    #pupil {width:20px;height:20px;background:#4b0082;position:absolute;top:50px;left:10px;z-index:1;animation:eyesMovement 3s infinite}
+    #pupil1{width:20px;height:20px;background:#4b0082;position:absolute;top:50px;right:50px;z-index:1;animation:eyesMovement 3s infinite}
+    @keyframes eyesMovement{0%,49%{transform:translateX(0)}50%,99%{transform:translateX(10px)}100%{transform:translateX(0)}}
+    #shadow{background:#4b0082;width:140px;height:140px;position:absolute;border-radius:50%;transform:rotateX(80deg);filter:blur(20px);top:80%;animation:shadowMovement .5s infinite}
+    @keyframes shadowMovement{0%,49%{opacity:.3}50%,100%{opacity:.1}}
+
+    /* ── Claude-style prompt box ── */
+    .chat-prompt {
+      width: 100%;
+      background: #fffdf7;
+      border: 1.5px solid #d8cfe8;
+      border-radius: 20px;
+      box-shadow: 0 4px 28px rgba(124,58,237,0.10);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .chat-prompt.visible { opacity:1; transform:translateY(0); }
+
+    .prompt-body {
+      padding: 20px 22px 14px;
+      min-height: 64px;
+      font-size: 16px;
+      color: #1a0533;
+      line-height: 1.5;
+    }
+
+    .prompt-cursor {
+      display: inline-block;
+      width: 2px; height: 18px;
+      background: #7c3aed;
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink .75s step-end infinite;
+    }
+    @keyframes blink{50%{opacity:0}}
+
+    .prompt-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 14px;
+      border-top: 1px solid #ede6d8;
+    }
+    .prompt-bar-left { display:flex; align-items:center; gap:10px; }
+
+    .prompt-upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      background: #f3edff;
+      color: #7c3aed;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1.5px solid #d8cfe8;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      user-select: none;
+    }
+    .prompt-upload-btn:hover { background:#e8deff; border-color:#b89ee8; }
+
+    .prompt-label { font-size:13px; color:#9a8ab0; font-weight:500; }
+    .prompt-label span { color:#7c3aed; font-weight:600; }
+
+    .prompt-send {
+      width:34px; height:34px;
+      background:#7c3aed; border:none; border-radius:50%;
+      color:white; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; opacity:.85;
+      transition: opacity .2s, transform .1s;
+    }
+    .prompt-send:hover  { opacity:1; }
+    .prompt-send:active { transform:scale(.93); }
+
+    /* link input inside prompt */
+    .prompt-link-input {
+      display: none;
+      width: 100%;
+      padding: 0 22px 14px;
+    }
+    .prompt-link-input.show { display: block; }
+
+    .prompt-link-input input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #d8cfe8;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fdf8f0;
+      color: #1a0533;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .prompt-link-input input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+    }
+    .prompt-link-input input::placeholder { color: #b8aac8; }
+
+    /* uploaded file tags under prompt */
+    .hero-file-list {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .hero-file-tag {
+      display:flex; align-items:center; gap:6px;
+      padding:6px 12px;
+      background:#fffdf7;
+      border:1.5px solid #d8cfe8;
+      border-radius:8px;
+      font-size:13px; color:#3b1f6e;
+      box-shadow:0 1px 6px rgba(124,58,237,.07);
+    }
+    .hero-file-tag svg { color:#7c3aed; flex-shrink:0; }
+    .hero-file-tag button { background:none;border:none;color:#9a8ab0;cursor:pointer;font-size:15px;margin-left:2px; }
+    .hero-file-tag button:hover { color:#7c3aed; }
+
+    /* ════════════════════════════
+       INLINE WAITLIST FORM
+       (appears below prompt on Enter)
+    ════════════════════════════ */
+    .waitlist-form-wrap {
+      width: 100%;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .45s ease;
+    }
+    .waitlist-form-wrap.open {
+      grid-template-rows: 1fr;
+    }
+    .waitlist-form-inner {
+      overflow: hidden;
+    }
+
+    .waitlist-card {
+      background: #fffdf7;
+      border: 1.5px solid #e8dfc8;
+      border-radius: 20px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.08);
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .waitlist-card p {
+      font-size: 13px;
+      color: #7a6e8a;
+    }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+    .field { display:flex; flex-direction:column; gap:5px; }
+    .field label { font-size:12px; font-weight:600; color:#3b1f6e; }
+    .field input {
+      padding: 10px 13px;
+      border: 1.5px solid #d8cfe8;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fdf8f0;
+      color: #1a0533;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus { border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,.12); }
+    .field input::placeholder { color:#b8aac8; }
+
+    .btn-submit {
+      width:100%; padding:13px;
+      background:#7c3aed; color:white;
+      font-size:15px; font-weight:600;
+      border:none; border-radius:10px;
+      cursor:pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn-submit:hover  { background:#6d28d9; }
+    .btn-submit:active { transform:scale(.98); }
+    .btn-submit:disabled { opacity:.6; cursor:not-allowed; }
+
+    /* ── Full-page success overlay ── */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      background: #fdf8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .6s ease;
+      z-index: 100;
+    }
+    .success-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* big ghost for success screen */
+    .success-ghost-wrap {
+      position: relative;
+      width: 140px;
+      height: 160px;
+    }
+    #successGhost {
+      position: absolute;
+      top: 0; left: 0;
+      transform: scale(1);
+      transform-origin: top left;
+    }
+
+    .success-title {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800;
+      color: #1a0533;
+      letter-spacing: -1.5px;
+      text-align: center;
+      line-height: 1.1;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .success-title.show { opacity:1; transform:translateY(0); }
+    .success-title span { color: #7c3aed; }
+
+    .success-sub {
+      font-size: clamp(14px, 2vw, 17px);
+      color: #7a6e8a;
+      text-align: center;
+      line-height: 1.7;
+      max-width: 420px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .success-sub.show { opacity:1; transform:translateY(0); }
+
+    /* ── Three-body spinner ── */
+    .three-body {
+      --uib-size: 48px;
+      --uib-speed: 0.8s;
+      --uib-color: #7c3aed;
+      position: relative;
+      display: inline-block;
+      height: var(--uib-size);
+      width: var(--uib-size);
+      animation: spin78236 calc(var(--uib-speed) * 2.5) infinite linear;
+      transition: opacity .4s ease;
+    }
+    .three-body.hide { opacity: 0; pointer-events: none; }
+
+    .three-body__dot {
+      position: absolute;
+      height: 100%;
+      width: 30%;
+    }
+    .three-body__dot:after {
+      content: '';
+      position: absolute;
+      height: 0%;
+      width: 100%;
+      padding-bottom: 100%;
+      background-color: var(--uib-color);
+      border-radius: 50%;
+    }
+    .three-body__dot:nth-child(1) {
+      bottom: 5%; left: 0;
+      transform: rotate(60deg);
+      transform-origin: 50% 85%;
+    }
+    .three-body__dot:nth-child(1)::after {
+      bottom: 0; left: 0;
+      animation: wobble1 var(--uib-speed) infinite ease-in-out;
+      animation-delay: calc(var(--uib-speed) * -0.3);
+    }
+    .three-body__dot:nth-child(2) {
+      bottom: 5%; right: 0;
+      transform: rotate(-60deg);
+      transform-origin: 50% 85%;
+    }
+    .three-body__dot:nth-child(2)::after {
+      bottom: 0; left: 0;
+      animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
+    }
+    .three-body__dot:nth-child(3) {
+      bottom: -5%; left: 0;
+      transform: translateX(116.666%);
+    }
+    .three-body__dot:nth-child(3)::after {
+      top: 0; left: 0;
+      animation: wobble2 var(--uib-speed) infinite ease-in-out;
+    }
+
+    @keyframes spin78236 {
+      0%   { transform: rotate(0deg);   }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes wobble1 {
+      0%,100% { transform: translateY(0%) scale(1);     opacity: 1;   }
+      50%     { transform: translateY(-66%) scale(0.65); opacity: 0.8; }
+    }
+    @keyframes wobble2 {
+      0%,100% { transform: translateY(0%) scale(1);    opacity: 1;   }
+      50%     { transform: translateY(66%) scale(0.65); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+
+    <!-- Ghost + Heading -->
+    <div class="greeting">
+      <div class="ghost-wrap">
+        <div id="ghost">
+          <div id="shadow"></div>
+          <div id="red">
+            <div id="top0"></div><div id="top1"></div><div id="top2"></div>
+            <div id="top3"></div><div id="top4"></div>
+            <div id="st0"></div><div id="st1"></div><div id="st2"></div>
+            <div id="st3"></div><div id="st4"></div><div id="st5"></div>
+            <div id="an1"></div><div id="an2"></div><div id="an3"></div>
+            <div id="an4"></div><div id="an5"></div><div id="an6"></div>
+            <div id="an7"></div><div id="an8"></div><div id="an9"></div>
+            <div id="an10"></div><div id="an11"></div><div id="an12"></div>
+            <div id="an13"></div><div id="an14"></div><div id="an15"></div>
+            <div id="an16"></div><div id="an17"></div><div id="an18"></div>
+            <div id="eye"><div id="pupil"></div></div>
+            <div id="eye1"><div id="pupil1"></div></div>
+          </div>
+        </div>
+      </div>
+      <h1>Build Something Great</h1>
+    </div>
+
+    <!-- Prompt box -->
+    <div class="chat-prompt" id="chatPrompt">
+      <div class="prompt-body">
+        <span id="chatText"></span><span class="prompt-cursor" id="promptCursor"></span>
+      </div>
+      <div class="prompt-link-input" id="linkInputWrap">
+        <input type="url" id="linkInput" placeholder="Paste a Figma or Lovable link…" />
+        <p style="font-size:12px;color:#b8aac8;margin-top:6px;display:flex;align-items:center;gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:#7c3aed"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Make sure your link is set to <strong style="color:#7c3aed;">&nbsp;public / anyone with the link</strong>&nbsp;so we can access it.
+        </p>
+      </div>
+      <div class="prompt-bar">
+        <div class="prompt-bar-left">
+          <label class="prompt-upload-btn" title="Upload screenshot">
+            <input type="file" id="heroFileInput" accept="image/*" multiple style="display:none" />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Upload
+          </label>
+          <span class="prompt-label">Pixel Stack &nbsp;<span>v1</span></span>
+        </div>
+        <button class="prompt-send" type="button" id="heroSendBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Uploaded file tags -->
+    <div class="hero-file-list" id="heroFileList"></div>
+
+    <!-- Waitlist form (slides in on Enter / send) -->
+    <div class="waitlist-form-wrap" id="formWrap">
+      <div class="waitlist-form-inner">
+        <div class="waitlist-card">
+          <p>Join the waitlist — we'll notify you when Pixel is ready to ship your code.</p>
+
+          <form id="waitlistForm">
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-row">
+                <div class="field">
+                  <label for="f-name">Name</label>
+                  <input id="f-name" name="name" type="text" placeholder="Jane Doe" required />
+                </div>
+                <div class="field">
+                  <label for="f-phone">Phone number</label>
+                  <input id="f-phone" name="phone" type="tel" placeholder="+1 555 000 0000" required />
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-email">Email address</label>
+                <input id="f-email" name="email" type="email" placeholder="jane@example.com" required />
+              </div>
+              <div class="field">
+                <label for="f-github">GitHub account</label>
+                <input id="f-github" name="github" type="text" placeholder="github.com/username" required />
+              </div>
+              <button type="submit" class="btn-submit" id="submitBtn">Join Waitlist</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.hero -->
+
+  <!-- Full-page success overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-ghost-wrap">
+      <div id="successGhost">
+        <div id="successShadow" style="background:#4b0082;width:140px;height:140px;position:absolute;border-radius:50%;transform:rotateX(80deg);filter:blur(20px);top:80%;animation:shadowMovement .5s infinite;"></div>
+        <div id="successRed" style="animation:upNDown .5s infinite;position:relative;width:140px;height:140px;display:grid;grid-template-columns:repeat(14,1fr);grid-template-rows:repeat(14,1fr);grid-template-areas:'a1 a2 a3 a4 a5 s0 s0 s0 s0 a10 a11 a12 a13 a14' 'b1 b2 b3 s1 s1 s1 s1 s1 s1 s1 s1 b12 b13 b14' 'c1 c2 s2 s2 s2 s2 s2 s2 s2 s2 s2 s2 c13 c14' 'd1 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 d14' 'e1 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 e14' 'f1 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 s3 f14' 's4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4' 's4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4' 's4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4' 's4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4' 's4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4' 's4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4 s4' 'ss0 ss0 sa4 ss1 sa7 ss2 sa10 sa10 ss3 sa13 ss4 sa16 ss5 ss5' 'sa1 sa2 sa3 sa5 sa6 sa8 sa9 sa9 sa11 sa12 sa14 sa15 sa17 sa18';">
+          <div style="grid-area:s0;background:#7c3aed"></div>
+          <div style="grid-area:s1;background:#7c3aed"></div>
+          <div style="grid-area:s2;background:#7c3aed"></div>
+          <div style="grid-area:s3;background:#7c3aed"></div>
+          <div style="grid-area:s4;background:#7c3aed"></div>
+          <div style="grid-area:ss0;background:#7c3aed"></div>
+          <div style="grid-area:ss1;background:#7c3aed"></div>
+          <div style="grid-area:ss2;background:#7c3aed"></div>
+          <div style="grid-area:ss3;background:#7c3aed"></div>
+          <div style="grid-area:ss4;background:#7c3aed"></div>
+          <div style="grid-area:ss5;background:#7c3aed"></div>
+          <div style="grid-area:sa1;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa2;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa3;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa4;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa6;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa7;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa8;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa9;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa10;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa11;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa12;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa13;animation:flicker0 .5s infinite"></div>
+          <div style="grid-area:sa15;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa16;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa17;animation:flicker1 .5s infinite"></div>
+          <div style="grid-area:sa18;animation:flicker0 .5s infinite"></div>
+          <div style="width:40px;height:50px;position:absolute;top:30px;left:10px;">
+            <div style="content:'';background:white;width:20px;height:50px;transform:translateX(10px);display:block;position:absolute;"></div>
+            <div style="content:'';background:white;width:40px;height:30px;transform:translateY(10px);display:block;position:absolute;"></div>
+            <div style="width:20px;height:20px;background:#4b0082;position:absolute;top:20px;left:10px;z-index:1;animation:eyesMovement 3s infinite;"></div>
+          </div>
+          <div style="width:40px;height:50px;position:absolute;top:30px;right:30px;">
+            <div style="content:'';background:white;width:20px;height:50px;transform:translateX(10px);display:block;position:absolute;"></div>
+            <div style="content:'';background:white;width:40px;height:30px;transform:translateY(10px);display:block;position:absolute;"></div>
+            <div style="width:20px;height:20px;background:#4b0082;position:absolute;top:20px;right:10px;z-index:1;animation:eyesMovement 3s infinite;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="three-body" id="successSpinner">
+      <div class="three-body__dot"></div>
+      <div class="three-body__dot"></div>
+      <div class="three-body__dot"></div>
+    </div>
+    <p class="success-title" id="successTitle">You are on<br>the <span>waitlist</span></p>
+    <p class="success-sub" id="successSub">Pixel launches in April. Congrats on being the first 20 developers to sign up.<br>We will reach out to you with the free codes shipped.</p>
+  </div>
+
+  <script>
+    const WEB3FORMS_KEY = 'c261fcb5-0976-4272-ae3f-f03c24878f7a';
+
+    /* ── Typewriter ── */
+    const chatEl = document.getElementById('chatText');
+    const cursor = document.getElementById('promptCursor');
+    const prompt = document.getElementById('chatPrompt');
+    const msg    = 'Upload your Figma / Lovable / Frontend Designs and Pixel will ship the full code to you';
+
+    setTimeout(() => {
+      prompt.classList.add('visible');
+      let i = 0;
+      setTimeout(() => {
+        const iv = setInterval(() => {
+          chatEl.textContent += msg[i++];
+          if (i === msg.length) {
+            clearInterval(iv);
+            cursor.style.display = 'none';
+            // show the link paste input
+            document.getElementById('linkInputWrap').classList.add('show');
+            setTimeout(() => document.getElementById('linkInput').focus(), 100);
+          }
+        }, 32);
+      }, 400);
+    }, 600);
+
+    /* ── Link list ── */
+    const links = [];
+
+    function addLinkAndOpenForm() {
+      const input = document.getElementById('linkInput');
+      const val   = input.value.trim();
+      if (val) { links.push(val); input.value = ''; renderLinks(); }
+      openForm();
+    }
+
+    document.getElementById('linkInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); addLinkAndOpenForm(); }
+    });
+
+    function renderLinks() {
+      const list = document.getElementById('heroFileList');
+      // re-render both links and files together
+      renderTags();
+    }
+
+    /* ── Show waitlist form ── */
+    function openForm() {
+      document.getElementById('formWrap').classList.add('open');
+      setTimeout(() => document.getElementById('f-name').focus(), 460);
+    }
+
+    document.getElementById('heroSendBtn').addEventListener('click', addLinkAndOpenForm);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !['INPUT','TEXTAREA','BUTTON'].includes(e.target.tagName)) openForm();
+    });
+
+    /* ── File upload ── */
+    const files = [];
+    document.getElementById('heroFileInput').addEventListener('change', function () {
+      [...this.files].forEach(f => { if (!files.find(x => x.name === f.name)) files.push(f); });
+      renderTags();
+    });
+
+    function renderTags() {
+      const list = document.getElementById('heroFileList');
+      list.innerHTML = '';
+
+      links.forEach((l, idx) => {
+        const tag = document.createElement('div');
+        tag.className = 'hero-file-tag';
+        tag.innerHTML = `
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          <span>${l}</span>
+          <button type="button" onclick="removeLink(${idx})">×</button>`;
+        list.appendChild(tag);
+      });
+
+      files.forEach((f, idx) => {
+        const tag = document.createElement('div');
+        tag.className = 'hero-file-tag';
+        tag.innerHTML = `
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span>${f.name}</span>
+          <button type="button" onclick="removeFile(${idx})">×</button>`;
+        list.appendChild(tag);
+      });
+    }
+
+    window.removeLink = (idx) => { links.splice(idx, 1); renderTags(); };
+    window.removeFile = (idx) => { files.splice(idx, 1); renderTags(); };
+
+    /* ── Submit → Web3Forms ── */
+    document.getElementById('waitlistForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const payload = {
+        access_key:   WEB3FORMS_KEY,
+        subject:      'New Pixel Stack Waitlist Signup',
+        name:         document.getElementById('f-name').value.trim(),
+        email:        document.getElementById('f-email').value.trim(),
+        phone:        document.getElementById('f-phone').value.trim(),
+        github:       document.getElementById('f-github').value.trim(),
+        'design links': links.join(', ') || 'None',
+        screenshots:    files.map(f => f.name).join(', ') || 'None',
+      };
+
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        document.getElementById('successOverlay').classList.add('show');
+        // spinner shows for 3s, then fades out and title appears
+        setTimeout(() => {
+          document.getElementById('successSpinner').classList.add('hide');
+          setTimeout(() => {
+            document.getElementById('successTitle').classList.add('show');
+            setTimeout(() => {
+              document.getElementById('successSub').classList.add('show');
+            }, 300);
+          }, 400);
+        }, 3000);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Join Waitlist';
+        alert('Something went wrong — please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

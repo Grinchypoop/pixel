@@ -588,7 +588,18 @@
   </div>
 
   <script>
-    const WEB3FORMS_KEY = 'c261fcb5-0976-4272-ae3f-f03c24878f7a';
+    const WEB3FORMS_KEY    = 'c261fcb5-0976-4272-ae3f-f03c24878f7a';
+
+    /* ─────────────────────────────────────────
+       CLOUDINARY CONFIG
+       1. Sign up free at cloudinary.com
+       2. Dashboard → Settings → Upload → Add upload preset
+          - Signing mode: Unsigned
+          - Copy the preset name
+       3. Your cloud name is on the dashboard home
+    ───────────────────────────────────────── */
+    const CLOUDINARY_CLOUD  = 'YOUR_CLOUD_NAME';
+    const CLOUDINARY_PRESET = 'YOUR_UPLOAD_PRESET';
 
     /* ── Typewriter ── */
     const chatEl = document.getElementById('chatText');
@@ -644,12 +655,38 @@
       if (e.key === 'Enter' && !['INPUT','TEXTAREA','BUTTON'].includes(e.target.tagName)) openForm();
     });
 
-    /* ── File upload ── */
+    /* ── File upload → Cloudinary ── */
+    // Each entry: { name, url, uploading }
     const files = [];
+
     document.getElementById('heroFileInput').addEventListener('change', function () {
-      [...this.files].forEach(f => { if (!files.find(x => x.name === f.name)) files.push(f); });
-      renderTags();
+      [...this.files].forEach(f => {
+        if (!files.find(x => x.name === f.name)) {
+          const entry = { name: f.name, url: null, uploading: true };
+          files.push(entry);
+          renderTags();
+          uploadToCloudinary(f, entry);
+        }
+      });
     });
+
+    async function uploadToCloudinary(file, entry) {
+      const form = new FormData();
+      form.append('file', file);
+      form.append('upload_preset', CLOUDINARY_PRESET);
+      try {
+        const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+          method: 'POST', body: form,
+        });
+        const data = await res.json();
+        entry.url      = data.secure_url;
+        entry.uploading = false;
+      } catch {
+        entry.url      = 'upload-failed';
+        entry.uploading = false;
+      }
+      renderTags();
+    }
 
     function renderTags() {
       const list = document.getElementById('heroFileList');
@@ -671,14 +708,18 @@
       files.forEach((f, idx) => {
         const tag = document.createElement('div');
         tag.className = 'hero-file-tag';
-        tag.innerHTML = `
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <polyline points="21 15 16 10 5 21"/>
-          </svg>
-          <span>${f.name}</span>
-          <button type="button" onclick="removeFile(${idx})">×</button>`;
+        tag.innerHTML = f.uploading
+          ? `<span style="color:#9a8ab0;font-size:12px;">Uploading ${f.name}…</span>`
+          : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+               <rect x="3" y="3" width="18" height="18" rx="2"/>
+               <circle cx="8.5" cy="8.5" r="1.5"/>
+               <polyline points="21 15 16 10 5 21"/>
+             </svg>
+             <span>${f.name}</span>
+             ${f.url && f.url !== 'upload-failed'
+               ? `<a href="${f.url}" target="_blank" style="color:#7c3aed;font-size:11px;text-decoration:none;">view</a>`
+               : `<span style="color:#e57373;font-size:11px;">failed</span>`}
+             <button type="button" onclick="removeFile(${idx})">×</button>`;
         list.appendChild(tag);
       });
     }
@@ -701,7 +742,7 @@
         phone:        document.getElementById('f-phone').value.trim(),
         github:       document.getElementById('f-github').value.trim(),
         'design links': links.join(', ') || 'None',
-        screenshots:    files.map(f => f.name).join(', ') || 'None',
+        screenshots:    files.filter(f => f.url && f.url !== 'upload-failed').map(f => f.url).join('\n') || 'None',
       };
 
       const res = await fetch('https://api.web3forms.com/submit', {

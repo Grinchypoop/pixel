@@ -362,6 +362,55 @@
     }
     .success-sub.show { opacity:1; transform:translateY(0); }
 
+    /* ════════════════════════════
+       MOBILE
+    ════════════════════════════ */
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 16px;
+        justify-content: flex-start;
+        padding-top: 48px;
+      }
+
+      .greeting { gap: 12px; }
+
+      .greeting h1 {
+        font-size: 26px;
+        letter-spacing: -0.5px;
+      }
+
+      .ghost-wrap { width: 34px; height: 34px; }
+      #ghost { transform: scale(0.24); transform-origin: top left; }
+
+      .chat-prompt { border-radius: 14px; }
+      .prompt-body { font-size: 14px; padding: 14px 16px 10px; min-height: 52px; }
+      .prompt-link-input { padding: 0 16px 12px; }
+      .prompt-link-input input { font-size: 13px; }
+      .prompt-bar { padding: 8px 12px 12px; gap: 8px; }
+      .prompt-upload-btn { padding: 6px 10px; font-size: 12px; gap: 4px; }
+      .prompt-label { font-size: 11px; }
+      .prompt-send { width: 30px; height: 30px; }
+
+      .hero-file-list { gap: 6px; }
+      .hero-file-tag { font-size: 12px; padding: 5px 10px; }
+
+      .waitlist-card { padding: 20px 16px; border-radius: 16px; }
+      .waitlist-card > p { font-size: 12px; }
+
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+
+      .field label { font-size: 12px; }
+      .field input { font-size: 14px; padding: 10px 12px; }
+
+      .btn-submit { font-size: 14px; padding: 13px; }
+
+      .success-overlay { padding: 24px; }
+      .success-ghost-wrap { width: 110px; height: 126px; }
+      #successRed { transform: scale(0.78); transform-origin: top left; }
+      .success-title { font-size: 34px; letter-spacing: -1px; }
+      .success-sub { font-size: 13px; padding: 0 4px; }
+    }
+
     /* ── Three-body spinner ── */
     .three-body {
       --uib-size: 48px;

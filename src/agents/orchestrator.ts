@@ -25,6 +25,7 @@ export async function runOrchestrator(
   goal: string,
   emit: Emit,
   sessionId: string,
+  userPlan: string = 'free',
 ): Promise<OrchestratorResult> {
   const e = (type: AgentEvent['type'], message: string, data?: unknown) =>
     emit({ type, agent: 'Orchestrator', message, data, sessionId, ts: Date.now() });
@@ -63,7 +64,7 @@ export async function runOrchestrator(
     e('agent_log', `Build attempt ${attempt}/${MAX_BUILD_ATTEMPTS}…`);
 
     try {
-      buildResult = await runCoder(plan, workDir, emit, sessionId);
+      buildResult = await runCoder(plan, workDir, emit, sessionId, userPlan);
     } catch (err) {
       buildResult = {
         success: false,

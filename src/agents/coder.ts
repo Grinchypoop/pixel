@@ -99,11 +99,14 @@ export async function runCoder(
   workDir: string,
   emit: Emit,
   sessionId: string,
+  userPlan: string = 'free',
 ): Promise<BuildResult> {
   const e = (type: AgentEvent['type'], message: string, data?: unknown) =>
     emit({ type, agent: 'Coder', message, data, sessionId, ts: Date.now() });
 
   e('agent_start', `Starting to build ${plan.projectName} with ${plan.stack}`);
+
+  const isFreeTier = userPlan === 'free';
 
   const planSummary = JSON.stringify(
     {
@@ -174,8 +177,10 @@ Custom CSS component rules (inspired by uiverse.io style):
 - Checkboxes/toggles: fully custom styled with CSS animations
 - Transitions: smooth 200-300ms ease on all interactive elements
 - Empty states and loading states must be designed with these custom styles — never leave a blank screen
-
-Pixel watermark (REQUIRED on every app):
+${isFreeTier ? `
+Pixel watermark (REQUIRED — this user is on the free plan):` : `
+Do NOT add any Pixel watermark or badge — this user is on a paid plan.`}
+${isFreeTier ? `
 Every app you build MUST include a small "Built with Pixel" badge fixed to the bottom-right corner of the page.
 Use this exact HTML and CSS (colors changed to purple):
 
@@ -257,7 +262,7 @@ CSS:
 #pupil1{width:20px;height:20px;background-color:#4c1d95;position:absolute;top:50px;right:50px;z-index:1;animation:eyesMovement infinite 3s}
 @keyframes eyesMovement{0%,49%{transform:translateX(0px)}50%,99%{transform:translateX(10px)}100%{transform:translateX(0px)}}
 #shadow{background-color:#7c3aed;width:140px;height:140px;position:absolute;border-radius:50%;transform:rotateX(80deg);filter:blur(20px);top:80%;animation:shadowMovement infinite 0.5s}
-@keyframes shadowMovement{0%,49%{opacity:0.5}50%,100%{opacity:0.2}}`,
+@keyframes shadowMovement{0%,49%{opacity:0.5}50%,100%{opacity:0.2}}` : ''}`,
       tools: TOOLS,
       tool_choice: { type: 'auto' },
       messages,

@@ -70,13 +70,13 @@ function broadcast(sessionId: string, event: AgentEvent) {
   }
 }
 
-async function startPipeline(goal: string, sessionId: string): Promise<void> {
+async function startPipeline(goal: string, sessionId: string, userPlan: string = 'free'): Promise<void> {
   const session = sessions.get(sessionId)!;
 
   const emit = (event: AgentEvent) => broadcast(sessionId, event);
 
   try {
-    const result = await runOrchestrator(goal, emit, sessionId);
+    const result = await runOrchestrator(goal, emit, sessionId, userPlan);
     session.status = result.success ? 'done' : 'error';
     session.result = result;
     await updateBuildStatus(sessionId, session.status, result.deployUrl);
@@ -159,7 +159,7 @@ app.post('/api/build', checkUsage, async (req, res) => {
   await recordBuild(user.id, sessionId, user.plan);
 
   // Fire and forget — progress streams via WebSocket
-  startPipeline(goal.trim(), sessionId).catch(console.error);
+  startPipeline(goal.trim(), sessionId, user.plan).catch(console.error);
 
   res.json({ sessionId });
 });

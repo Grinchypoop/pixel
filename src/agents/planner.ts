@@ -132,8 +132,7 @@ export async function runPlanner(
   while (true) {
     const response = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 8192,
-      thinking: { type: 'adaptive' },
+      max_tokens: 4096,
       system: `You are Pixel's Planner agent — a world-class software architect.
 
 Your responsibilities:
@@ -161,13 +160,8 @@ IMPORTANT — Vercel deployment constraints (always follow these):
       messages,
     });
 
-    // Surface thinking and text to frontend
     for (const block of response.content) {
-      if (block.type === 'thinking') {
-        e('agent_thinking', block.thinking.slice(0, 500) + (block.thinking.length > 500 ? '…' : ''));
-      } else if (block.type === 'text' && block.text.trim()) {
-        e('agent_log', block.text);
-      }
+      if (block.type === 'text' && block.text.trim()) e('agent_log', block.text);
     }
 
     if (response.stop_reason === 'end_turn') break;

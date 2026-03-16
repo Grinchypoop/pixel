@@ -140,9 +140,8 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // ─── Build ───────────────────────────────────────────────────────────────────
-app.post('/api/build', checkUsage, async (req, res) => {
+app.post('/api/build', async (req, res) => {
   const { goal } = req.body as { goal?: string };
-  const user = (req as any).pixelUser;
 
   if (!goal || typeof goal !== 'string' || goal.trim().length < 5) {
     res.status(400).json({ error: 'goal must be a non-empty string' });
@@ -156,10 +155,8 @@ app.post('/api/build', checkUsage, async (req, res) => {
     subscribers: new Set(),
   });
 
-  await recordBuild(user.id, sessionId, user.plan);
-
   // Fire and forget — progress streams via WebSocket
-  startPipeline(goal.trim(), sessionId, user.plan).catch(console.error);
+  startPipeline(goal.trim(), sessionId, 'pro').catch(console.error);
 
   res.json({ sessionId });
 });

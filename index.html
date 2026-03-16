@@ -488,7 +488,7 @@
     try {
       const res = await fetch(`${BACKEND}/api/build`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': getUserKey() },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ goal: approvedGoal }),
       });
       const { sessionId, error } = await res.json();

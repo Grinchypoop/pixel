@@ -501,22 +501,6 @@
     scrollFeed();
   }
 
-  function addReadyCard(goalSummary) {
-    const feed = document.getElementById('feed');
-    const el = document.createElement('div');
-    el.className = 'fadein';
-    el.innerHTML = `
-      <div class="build-approved">
-        <div class="build-approved-text">
-          <strong>Ready to build</strong>
-          Plan approved — Pixel will now write and deploy your app.
-        </div>
-        <button class="btn-build" onclick="startBuild()">Build →</button>
-      </div>`;
-    feed.appendChild(el);
-    scrollFeed();
-  }
-
   function showTyping() {
     const feed = document.getElementById('feed');
     if (document.getElementById('typing')) return;
@@ -547,10 +531,14 @@
 
       if (data.ready) {
         approvedGoal = data.goalSummary || pendingGoal || chatHistory[0]?.content || '';
-        addReadyCard(approvedGoal);
         // Update project name from goal
         const words = approvedGoal.split(/\s+/).slice(0,4).join(' ');
         document.getElementById('topbar-project').textContent = words + '…';
+        // Auto-start build — show skeleton immediately
+        document.getElementById('preview-empty').style.display = 'none';
+        document.getElementById('skeleton').style.display = 'flex';
+        startBuild();
+        return;
       }
     } catch {
       removeTyping();
@@ -564,11 +552,6 @@
   async function startBuild() {
     mode = 'building';
     document.getElementById('btn-send').disabled = true;
-    document.querySelector('.btn-build') && (document.querySelector('.btn-build').disabled = true);
-
-    // Show skeleton
-    document.getElementById('preview-empty').style.display = 'none';
-    document.getElementById('skeleton').style.display = 'flex';
 
     // Add status message in feed
     addBuildStatusMessage();

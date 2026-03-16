@@ -27,7 +27,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from './db/index.js';
 import { checkUsage, recordBuild, updateBuildStatus } from './middleware/usage.js';
 import { runOrchestrator } from './agents/orchestrator.js';
+import { plannerChat } from './agents/plannerChat.js';
 import type { AgentEvent, OrchestratorResult } from './types.js';
+import type { ChatMessage } from './agents/plannerChat.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -96,6 +98,21 @@ async function startPipeline(goal: string, sessionId: string): Promise<void> {
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, version: '1.0.0', model: 'claude-sonnet-4-6' });
+});
+
+// ─── Planner chat ────────────────────────────────────────────────────────────
+app.post('/api/chat', async (req, res) => {
+  const { messages } = req.body as { messages: ChatMessage[] };
+  if (!messages || !Array.isArray(messages)) {
+    res.status(400).json({ error: 'messages array required' });
+    return;
+  }
+  try {
+    const result = await plannerChat(messages);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
 });
 
 // ─── Auth: register a new user ───────────────────────────────────────────────

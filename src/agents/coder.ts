@@ -189,7 +189,7 @@ Critical rules:
               content: string;
             };
             await writeProjectFile(workDir, filePath, content);
-            e('file_written', `Created ${filePath}`, { path: filePath });
+            e('file_written', `Created ${filePath}`, { path: filePath, content: content.slice(0, 8000) });
             resultContent = `File written: ${filePath}`;
           }
 

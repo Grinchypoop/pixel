@@ -159,17 +159,21 @@ Critical rules:
 
 UI/UX Design rules (apply to every app you build):
 - Minimalistic, clean design — no clutter, generous whitespace
-- Use Tailwind CSS for all styling
+- Use Tailwind CSS for layout and spacing, but write custom CSS for interactive components
 - Color palette: neutral backgrounds (white/gray-50/gray-100), one accent color that fits the app's purpose
 - Typography: use a Google Font (Inter or Plus Jakarta Sans), clear hierarchy with font weights
 - Mobile responsive by default — every layout must work on small screens
-- Smooth subtle animations: hover transitions (150-200ms ease), fade-ins on load
-- Buttons: rounded-lg, clear hover/active states, never plain unstyled elements
-- Cards: subtle shadows (shadow-sm or shadow-md), rounded-xl, clean borders
-- Forms: floating labels or clean labeled inputs, focus rings in accent color
-- Empty states and loading states must be designed — never leave a blank screen
 - Navigation: sticky header with logo + nav links, hamburger menu on mobile
-- Overall feel: like a modern SaaS product (think Linear, Vercel, Notion aesthetics)`,
+- Overall feel: like a modern SaaS product (think Linear, Vercel, Notion aesthetics)
+
+Custom CSS component rules (inspired by uiverse.io style):
+- Buttons: craft custom CSS with creative hover effects — glowing box-shadows, shimmer sweeps, fill animations, or border-draw effects. Never use plain unstyled buttons.
+- Cards: use glassmorphism (backdrop-filter: blur + semi-transparent background) or soft neumorphic shadows where appropriate
+- Inputs/Forms: animated underline or floating label effects, glowing focus states with the accent color
+- Loaders: CSS-only spinners or pulsing dots — never a plain browser default
+- Checkboxes/toggles: fully custom styled with CSS animations
+- Transitions: smooth 200-300ms ease on all interactive elements
+- Empty states and loading states must be designed with these custom styles — never leave a blank screen`,
       tools: TOOLS,
       tool_choice: { type: 'auto' },
       messages,

@@ -280,26 +280,78 @@
 
     .log-header {
       display: flex; align-items: center; gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
     .log-spinner {
       width: 14px; height: 14px;
       border: 2px solid #e0d9f5; border-top-color: #7c3aed;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .log-title { font-size: 0.875rem; font-weight: 600; color: #555; }
 
-    .log-entries {
-      max-height: 260px; overflow-y: auto;
-      display: flex; flex-direction: column; gap: 5px;
+    /* Agent pipeline */
+    .pipeline {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 16px;
     }
-    .log-entry { display: flex; gap: 8px; font-size: 0.8rem; align-items: flex-start; }
-    .log-agent { font-weight: 600; color: #7c3aed; min-width: 80px; flex-shrink: 0; }
-    .log-msg { color: #444; word-break: break-word; line-height: 1.5; }
-    .log-msg.thinking { color: #aaa; font-style: italic; }
-    .log-msg.error { color: #dc2626; }
+    .agent-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      border: 1.5px solid #f0ecfa;
+      background: #fdfcff;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .agent-row.active {
+      border-color: #c4b5fd; background: #f5f0ff;
+    }
+    .agent-row.done {
+      border-color: #bbf7d0; background: #f0fdf4;
+    }
+    .agent-row.error {
+      border-color: #fca5a5; background: #fef2f2;
+    }
+    .agent-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+      background: #ede9f8; color: #7c3aed;
+    }
+    .agent-row.active .agent-icon { background: #7c3aed; color: white; }
+    .agent-row.done .agent-icon { background: #16a34a; color: white; }
+    .agent-row.error .agent-icon { background: #dc2626; color: white; }
+    .agent-info { flex: 1; min-width: 0; }
+    .agent-name {
+      font-size: 0.8rem; font-weight: 700; color: #333;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .agent-status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #d1d5db; flex-shrink: 0;
+    }
+    .agent-row.active .agent-status-dot {
+      background: #7c3aed;
+      animation: pulse 1s infinite;
+    }
+    .agent-row.done .agent-status-dot { background: #16a34a; }
+    .agent-row.error .agent-status-dot { background: #dc2626; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    .agent-msg {
+      font-size: 0.75rem; color: #888; margin-top: 2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .agent-row.active .agent-msg { color: #7c3aed; }
+    .agent-row.done .agent-msg { color: #16a34a; }
+    .agent-row.error .agent-msg { color: #dc2626; }
+    .agent-spinner {
+      width: 12px; height: 12px; flex-shrink: 0;
+      border: 2px solid #e0d9f5; border-top-color: #7c3aed;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
 
     .result-box {
       margin-top: 16px; padding: 14px 16px;
@@ -484,7 +536,43 @@
       <div class="log-spinner" id="log-spinner"></div>
       <span class="log-title" id="log-title">Pixel is building…</span>
     </div>
-    <div class="log-entries" id="log-entries"></div>
+    <div class="pipeline">
+      <div class="agent-row" id="agent-Orchestrator">
+        <div class="agent-icon">OR</div>
+        <div class="agent-info">
+          <div class="agent-name"><span class="agent-status-dot"></span>Orchestrator</div>
+          <div class="agent-msg" id="msg-Orchestrator">Waiting…</div>
+        </div>
+      </div>
+      <div class="agent-row" id="agent-Planner">
+        <div class="agent-icon">PL</div>
+        <div class="agent-info">
+          <div class="agent-name"><span class="agent-status-dot"></span>Planner</div>
+          <div class="agent-msg" id="msg-Planner">Waiting…</div>
+        </div>
+      </div>
+      <div class="agent-row" id="agent-Coder">
+        <div class="agent-icon">CO</div>
+        <div class="agent-info">
+          <div class="agent-name"><span class="agent-status-dot"></span>Coder</div>
+          <div class="agent-msg" id="msg-Coder">Waiting…</div>
+        </div>
+      </div>
+      <div class="agent-row" id="agent-Debugger">
+        <div class="agent-icon">DB</div>
+        <div class="agent-info">
+          <div class="agent-name"><span class="agent-status-dot"></span>Debugger</div>
+          <div class="agent-msg" id="msg-Debugger">Waiting…</div>
+        </div>
+      </div>
+      <div class="agent-row" id="agent-Deployer">
+        <div class="agent-icon">DP</div>
+        <div class="agent-info">
+          <div class="agent-name"><span class="agent-status-dot"></span>Deployer</div>
+          <div class="agent-msg" id="msg-Deployer">Waiting…</div>
+        </div>
+      </div>
+    </div>
     <div id="result-area"></div>
   </div>
 </div>
@@ -605,17 +693,44 @@
     ws.onerror   = () => pollStatus(sessionId);
   }
 
+  function setAgent(agent, state, msg) {
+    const row = document.getElementById(`agent-${agent}`);
+    const msgEl = document.getElementById(`msg-${agent}`);
+    if (!row || !msgEl) return;
+    row.className = `agent-row ${state}`;
+    if (msg) msgEl.textContent = msg.slice(0, 80) + (msg.length > 80 ? '…' : '');
+  }
+
   function handleEvent(ev, ws) {
     const { type, agent, message, data } = ev;
 
-    if (type === 'agent_thinking') {
-      addLog(agent, message.slice(0, 140) + (message.length > 140 ? '…' : ''), 'thinking');
-      return;
-    }
     if (type === 'command_output') return;
 
+    if (type === 'agent_thinking') {
+      setAgent(agent, 'active', '💭 Thinking…');
+      return;
+    }
+
+    if (type === 'agent_start') {
+      setAgent(agent, 'active', message);
+      return;
+    }
+
+    if (type === 'agent_log' || type === 'file_written') {
+      setAgent(agent, 'active', message);
+      return;
+    }
+
+    if (type === 'agent_complete') {
+      setAgent(agent, 'done', message);
+      if (agent === 'Deployer' && data?.url && !data.url.startsWith('http://localhost')) {
+        showResult(data.url);
+      }
+      return;
+    }
+
     if (type === 'agent_error') {
-      addLog(agent, message, 'error');
+      setAgent(agent, 'error', message);
       showError(message);
       stopSpinner();
       ws && ws.close();
@@ -630,24 +745,6 @@
       ws && ws.close();
       return;
     }
-
-    if (type === 'agent_complete' && agent === 'Deployer' && data?.url) {
-      if (!data.url.startsWith('http://localhost')) showResult(data.url);
-    }
-
-    if (['agent_start','agent_log','agent_complete','file_written'].includes(type)) {
-      addLog(agent || 'Pixel', message);
-    }
-  }
-
-  /* ── Log helpers ── */
-  function addLog(agent, msg, cls = '') {
-    const el = document.createElement('div');
-    el.className = 'log-entry';
-    el.innerHTML = `<span class="log-agent">${esc(agent)}</span><span class="log-msg ${cls}">${esc(msg)}</span>`;
-    const entries = document.getElementById('log-entries');
-    entries.appendChild(el);
-    entries.scrollTop = entries.scrollHeight;
   }
 
   function stopSpinner() {
@@ -687,6 +784,7 @@
     selectedDb = 'Supabase';
     pendingGoal = '';
     document.querySelectorAll('.db-option').forEach((b,i) => b.classList.toggle('selected', i === 0));
+    ['Orchestrator','Planner','Coder','Debugger','Deployer'].forEach(a => setAgent(a, '', 'Waiting…'));
     attachedFiles.length = 0;
     renderChips();
   }

@@ -24,6 +24,8 @@ import express from 'express';
 import cors from 'cors';
 import { WebSocketServer, WebSocket } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
+import { db } from './db/index.js';
+import { checkUsage, recordBuild, updateBuildStatus } from './middleware/usage.js';
 import { runOrchestrator } from './agents/orchestrator.js';
 import type { AgentEvent, OrchestratorResult } from './types.js';
 
@@ -75,9 +77,11 @@ async function startPipeline(goal: string, sessionId: string): Promise<void> {
     const result = await runOrchestrator(goal, emit, sessionId);
     session.status = result.success ? 'done' : 'error';
     session.result = result;
+    await updateBuildStatus(sessionId, session.status, result.deployUrl);
   } catch (err) {
     session.status = 'error';
     session.result = { success: false, error: (err as Error).message };
+    await updateBuildStatus(sessionId, 'error');
     broadcast(sessionId, {
       type: 'pipeline_error',
       agent: 'Orchestrator',
@@ -94,8 +98,34 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, version: '1.0.0', model: 'claude-sonnet-4-6' });
 });
 
-app.post('/api/build', (req, res) => {
+// ─── Auth: register a new user ───────────────────────────────────────────────
+app.post('/api/auth/register', async (req, res) => {
+  const { email } = req.body as { email?: string };
+  if (!email || !email.includes('@')) {
+    res.status(400).json({ error: 'Valid email required.' });
+    return;
+  }
+
+  // Check if already registered
+  const { data: existing } = await db.from('users').select('api_key').eq('email', email).single();
+  if (existing) {
+    res.json({ api_key: existing.api_key, message: 'Welcome back!' });
+    return;
+  }
+
+  const { data: user, error } = await db.from('users').insert({ email }).select('api_key').single();
+  if (error || !user) {
+    res.status(500).json({ error: 'Could not create account.' });
+    return;
+  }
+
+  res.json({ api_key: user.api_key, message: 'Account created! Save your API key.' });
+});
+
+// ─── Build ───────────────────────────────────────────────────────────────────
+app.post('/api/build', checkUsage, async (req, res) => {
   const { goal } = req.body as { goal?: string };
+  const user = (req as any).pixelUser;
 
   if (!goal || typeof goal !== 'string' || goal.trim().length < 5) {
     res.status(400).json({ error: 'goal must be a non-empty string' });
@@ -108,6 +138,8 @@ app.post('/api/build', (req, res) => {
     events: [],
     subscribers: new Set(),
   });
+
+  await recordBuild(user.id, sessionId, user.plan);
 
   // Fire and forget — progress streams via WebSocket
   startPipeline(goal.trim(), sessionId).catch(console.error);

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel — Build Something Great</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #faf8f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════
+       GHOST (purple)
+    ══════════════════════════════════════ */
+    #ghost { position: relative; scale: 0.8; }
+
+    #red {
+      animation: upNDown infinite 0.5s;
+      position: relative;
+      width: 140px; height: 140px;
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      grid-template-rows: repeat(14, 1fr);
+      grid-column-gap: 0px; grid-row-gap: 0px;
+      grid-template-areas:
+        "a1  a2  a3  a4  a5  top0  top0  top0  top0  a10 a11 a12 a13 a14"
+        "b1  b2  b3  top1 top1 top1 top1 top1 top1 top1 top1 b12 b13 b14"
+        "c1 c2 top2 top2 top2 top2 top2 top2 top2 top2 top2 top2 c13 c14"
+        "d1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 d14"
+        "e1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 e14"
+        "f1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 f14"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+        "st0 st0 an4 st1 an7 st2 an10 an10 st3 an13 st4 an16 st5 st5"
+        "an1 an2 an3 an5 an6 an8 an9 an9 an11 an12 an14 an15 an17 an18";
+    }
+
+    @keyframes upNDown {
+      0%, 49%  { transform: translateY(0px); }
+      50%, 100% { transform: translateY(-10px); }
+    }
+
+    #top0,#top1,#top2,#top3,#top4,
+    #st0,#st1,#st2,#st3,#st4,#st5 { background-color: #7c3aed; }
+
+    #top0  { grid-area: top0; }
+    #top1  { grid-area: top1; }
+    #top2  { grid-area: top2; }
+    #top3  { grid-area: top3; }
+    #top4  { grid-area: top4; }
+    #st0   { grid-area: st0;  }
+    #st1   { grid-area: st1;  }
+    #st2   { grid-area: st2;  }
+    #st3   { grid-area: st3;  }
+    #st4   { grid-area: st4;  }
+    #st5   { grid-area: st5;  }
+
+    #an1  { grid-area: an1;  animation: flicker0 infinite 0.5s; }
+    #an18 { grid-area: an18; animation: flicker0 infinite 0.5s; }
+    #an2  { grid-area: an2;  animation: flicker1 infinite 0.5s; }
+    #an17 { grid-area: an17; animation: flicker1 infinite 0.5s; }
+    #an3  { grid-area: an3;  animation: flicker1 infinite 0.5s; }
+    #an16 { grid-area: an16; animation: flicker1 infinite 0.5s; }
+    #an4  { grid-area: an4;  animation: flicker1 infinite 0.5s; }
+    #an15 { grid-area: an15; animation: flicker1 infinite 0.5s; }
+    #an5  { grid-area: an5;  }
+    #an6  { grid-area: an6;  animation: flicker0 infinite 0.5s; }
+    #an7  { grid-area: an7;  animation: flicker0 infinite 0.5s; }
+    #an8  { grid-area: an8;  animation: flicker0 infinite 0.5s; }
+    #an9  { grid-area: an9;  animation: flicker1 infinite 0.5s; }
+    #an10 { grid-area: an10; animation: flicker1 infinite 0.5s; }
+    #an11 { grid-area: an11; animation: flicker0 infinite 0.5s; }
+    #an12 { grid-area: an12; animation: flicker0 infinite 0.5s; }
+    #an13 { grid-area: an13; animation: flicker0 infinite 0.5s; }
+    #an14 { grid-area: an14; }
+
+    @keyframes flicker0 {
+      0%, 49%  { background-color: #7c3aed; }
+      50%, 100% { background-color: transparent; }
+    }
+    @keyframes flicker1 {
+      0%, 49%  { background-color: transparent; }
+      50%, 100% { background-color: #7c3aed; }
+    }
+
+    #eye {
+      width: 40px; height: 50px;
+      position: absolute; top: 30px; left: 10px;
+    }
+    #eye::before {
+      content: ""; background: white;
+      width: 20px; height: 50px;
+      transform: translateX(10px);
+      display: block; position: absolute;
+    }
+    #eye::after {
+      content: ""; background: white;
+      width: 40px; height: 30px;
+      transform: translateY(10px);
+      display: block; position: absolute;
+    }
+    #eye1 {
+      width: 40px; height: 50px;
+      position: absolute; top: 30px; right: 30px;
+    }
+    #eye1::before {
+      content: ""; background: white;
+      width: 20px; height: 50px;
+      transform: translateX(10px);
+      display: block; position: absolute;
+    }
+    #eye1::after {
+      content: ""; background: white;
+      width: 40px; height: 30px;
+      transform: translateY(10px);
+      display: block; position: absolute;
+    }
+    #pupil {
+      width: 20px; height: 20px;
+      background: #4c1d95;
+      position: absolute; top: 50px; left: 10px; z-index: 1;
+      animation: eyesMovement infinite 3s;
+    }
+    #pupil1 {
+      width: 20px; height: 20px;
+      background: #4c1d95;
+      position: absolute; top: 50px; right: 50px; z-index: 1;
+      animation: eyesMovement infinite 3s;
+    }
+    @keyframes eyesMovement {
+      0%, 49%  { transform: translateX(0px); }
+      50%, 99% { transform: translateX(10px); }
+      100%     { transform: translateX(0px); }
+    }
+    #shadow {
+      background: #7c3aed;
+      width: 140px; height: 140px;
+      position: absolute; border-radius: 50%;
+      transform: rotateX(80deg);
+      filter: blur(20px);
+      top: 80%;
+      animation: shadowMovement infinite 0.5s;
+    }
+    @keyframes shadowMovement {
+      0%, 49%  { opacity: 0.3; }
+      50%, 100% { opacity: 0.1; }
+    }
+
+    /* ══════════════════════════════════════
+       INTRO OVERLAY
+    ══════════════════════════════════════ */
+    #intro {
+      position: fixed; inset: 0;
+      background: #faf8f5;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+      transition: opacity 0.7s ease;
+    }
+    #intro.fade-out { opacity: 0; pointer-events: none; }
+
+    #intro-ghost-wrapper {
+      animation: introFloat 0.5s ease-in-out infinite alternate;
+    }
+    @keyframes introFloat {
+      from { transform: scale(1.6) translateY(0); }
+      to   { transform: scale(1.6) translateY(-8px); }
+    }
+
+    /* ══════════════════════════════════════
+       MAIN APP
+    ══════════════════════════════════════ */
+    #app {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #app.visible { opacity: 1; transform: translateY(0); }
+
+    .header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px;
+    }
+    .header h1 {
+      font-size: 2.4rem; font-weight: 800;
+      color: #1a1035; letter-spacing: -0.5px;
+    }
+
+    /* ══════════════════════════════════════
+       CARD
+    ══════════════════════════════════════ */
+    .card {
+      background: white;
+      border: 1.5px solid #ede9f8;
+      border-radius: 18px;
+      padding: 24px;
+      width: 100%; max-width: 620px;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.06);
+    }
+    .card-subtitle {
+      font-size: 0.95rem; color: #666;
+      margin-bottom: 14px; line-height: 1.55;
+    }
+    .goal-input {
+      width: 100%;
+      border: 1.5px solid #e8e4f5;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.95rem; color: #333;
+      resize: none; outline: none;
+      font-family: inherit;
+      min-height: 44px; max-height: 160px;
+      line-height: 1.5;
+      background: #fdfcff;
+      transition: border-color 0.2s;
+    }
+    .goal-input:focus { border-color: #7c3aed; }
+    .goal-input::placeholder { color: #b8aed4; }
+
+    .file-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: 10px;
+    }
+    .file-chip {
+      background: #f0ebff; color: #7c3aed;
+      font-size: 0.75rem; padding: 3px 10px;
+      border-radius: 20px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .file-chip button {
+      background: none; border: none; cursor: pointer;
+      color: #7c3aed; padding: 0; font-size: 0.8rem;
+    }
+
+    .card-bottom {
+      display: flex; align-items: center;
+      gap: 10px; margin-top: 16px;
+    }
+    .upload-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      border: 1.5px solid #e0d9f5; border-radius: 8px;
+      background: white; color: #7c3aed;
+      font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .upload-btn:hover { background: #f5f0ff; border-color: #7c3aed; }
+
+    .version-tag {
+      font-size: 0.8rem; color: #bbb;
+      margin-left: auto; white-space: nowrap;
+    }
+    .send-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #7c3aed; border: none; color: white;
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .send-btn:hover { background: #6d28d9; transform: scale(1.06); }
+    .send-btn:active { transform: scale(0.96); }
+    .send-btn:disabled { background: #c4b5fd; cursor: not-allowed; transform: none; }
+
+    /* ══════════════════════════════════════
+       LOG VIEW
+    ══════════════════════════════════════ */
+    #log-card { display: none; }
+
+    .log-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .log-spinner {
+      width: 14px; height: 14px;
+      border: 2px solid #e0d9f5; border-top-color: #7c3aed;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .log-title { font-size: 0.875rem; font-weight: 600; color: #555; }
+
+    .log-entries {
+      max-height: 260px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .log-entry { display: flex; gap: 8px; font-size: 0.8rem; align-items: flex-start; }
+    .log-agent { font-weight: 600; color: #7c3aed; min-width: 80px; flex-shrink: 0; }
+    .log-msg { color: #444; word-break: break-word; line-height: 1.5; }
+    .log-msg.thinking { color: #aaa; font-style: italic; }
+    .log-msg.error { color: #dc2626; }
+
+    .result-box {
+      margin-top: 16px; padding: 14px 16px;
+      background: #f0fdf4; border: 1.5px solid #86efac;
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .result-url {
+      color: #16a34a; font-weight: 600; font-size: 0.875rem;
+      flex: 1; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; text-decoration: none;
+    }
+    .result-url:hover { text-decoration: underline; }
+    .visit-btn {
+      padding: 6px 14px; background: #16a34a; color: white;
+      border: none; border-radius: 6px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      font-family: inherit; text-decoration: none; white-space: nowrap;
+    }
+    .error-box {
+      margin-top: 12px; padding: 12px 14px;
+      background: #fef2f2; border: 1.5px solid #fca5a5;
+      border-radius: 10px; font-size: 0.85rem; color: #dc2626;
+    }
+    .new-build-btn {
+      width: 100%; margin-top: 12px; padding: 10px;
+      background: white; color: #7c3aed;
+      border: 1.5px solid #e0d9f5; border-radius: 8px;
+      font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .new-build-btn:hover { background: #f5f0ff; }
+
+    /* ══════════════════════════════════════
+       CLARIFICATION CARD
+    ══════════════════════════════════════ */
+    #clarify-card { display: none; }
+    .clarify-title {
+      font-size: 0.95rem; font-weight: 600; color: #1a1035;
+      margin-bottom: 6px;
+    }
+    .clarify-sub {
+      font-size: 0.85rem; color: #888;
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .db-options {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .db-option {
+      padding: 8px 16px;
+      border: 1.5px solid #e0d9f5; border-radius: 8px;
+      background: white; color: #555;
+      font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .db-option:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f0ff; }
+    .db-option.selected {
+      border-color: #7c3aed; background: #7c3aed;
+      color: white;
+    }
+    .clarify-actions {
+      display: flex; gap: 10px; justify-content: flex-end;
+    }
+    .clarify-back {
+      padding: 10px 18px;
+      border: 1.5px solid #e0d9f5; border-radius: 8px;
+      background: white; color: #888;
+      font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .clarify-back:hover { background: #f5f5f5; }
+    .clarify-confirm {
+      padding: 10px 22px;
+      border: none; border-radius: 8px;
+      background: #7c3aed; color: white;
+      font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .clarify-confirm:hover { background: #6d28d9; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro">
+  <div id="intro-ghost-wrapper">
+    <div id="ghost">
+      <div id="red">
+        <div id="top0"></div><div id="top1"></div>
+        <div id="top2"></div><div id="top3"></div><div id="top4"></div>
+        <div id="st0"></div><div id="st1"></div><div id="st2"></div>
+        <div id="st3"></div><div id="st4"></div><div id="st5"></div>
+        <div id="an1"></div><div id="an2"></div><div id="an3"></div>
+        <div id="an4"></div><div id="an5"></div><div id="an6"></div>
+        <div id="an7"></div><div id="an8"></div><div id="an9"></div>
+        <div id="an10"></div><div id="an11"></div><div id="an12"></div>
+        <div id="an13"></div><div id="an14"></div><div id="an15"></div>
+        <div id="an16"></div><div id="an17"></div><div id="an18"></div>
+      </div>
+      <div id="eye"><div id="pupil"></div></div>
+      <div id="eye1"><div id="pupil1"></div></div>
+      <div id="shadow"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div id="app">
+  <div class="header">
+    <!-- Small ghost SVG -->
+    <svg width="38" height="46" viewBox="0 0 38 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 2C10.163 2 3 9.163 3 18v22l5-5 5 5 6-6 6 6 5-5V18C30 9.163 22.837 2 19 2z" fill="#7c3aed"/>
+      <rect x="10" y="14" width="7" height="9" rx="1" fill="white"/>
+      <rect x="21" y="14" width="7" height="9" rx="1" fill="white"/>
+      <rect x="12" y="17" width="4" height="4" rx="1" fill="#4c1d95"/>
+      <rect x="23" y="17" width="4" height="4" rx="1" fill="#4c1d95"/>
+    </svg>
+    <h1>Build Something Great</h1>
+  </div>
+
+  <!-- Input card -->
+  <div class="card" id="input-card">
+    <p class="card-subtitle">Describe what you want to build and Pixel will ship the full code to you</p>
+    <textarea
+      class="goal-input"
+      id="goal-input"
+      placeholder="What do you want to build? e.g. a todo app with dark mode, a landing page for a SaaS..."
+      rows="2"
+      oninput="autoResize(this)"
+    ></textarea>
+
+    <div class="file-chips" id="file-chips" style="display:none"></div>
+    <input type="file" id="file-input" multiple
+      accept="image/*,.txt,.md,.json,.csv,.js,.ts,.html,.css,.jsx,.tsx"
+      style="display:none"
+      onchange="handleFiles(this.files)"
+    />
+
+    <div class="card-bottom">
+      <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Upload
+      </button>
+      <span class="version-tag">Pixel Stack  v1</span>
+      <button class="send-btn" id="send-btn" onclick="handleSend()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Clarification card -->
+  <div class="card" id="clarify-card">
+    <p class="clarify-title">One quick thing before I start building</p>
+    <p class="clarify-sub">I'll use <strong>Supabase</strong> as the database unless you'd like something else.</p>
+    <div class="db-options">
+      <button class="db-option selected" onclick="selectDb(this, 'Supabase')">Supabase</button>
+      <button class="db-option" onclick="selectDb(this, 'Neon')">Neon</button>
+      <button class="db-option" onclick="selectDb(this, 'PlanetScale')">PlanetScale</button>
+      <button class="db-option" onclick="selectDb(this, 'MongoDB')">MongoDB</button>
+      <button class="db-option" onclick="selectDb(this, 'none')">No database</button>
+    </div>
+    <div class="clarify-actions">
+      <button class="clarify-back" onclick="goBack()">← Back</button>
+      <button class="clarify-confirm" onclick="confirmAndBuild()">Let's build it →</button>
+    </div>
+  </div>
+
+  <!-- Log card -->
+  <div class="card" id="log-card">
+    <div class="log-header">
+      <div class="log-spinner" id="log-spinner"></div>
+      <span class="log-title" id="log-title">Pixel is building…</span>
+    </div>
+    <div class="log-entries" id="log-entries"></div>
+    <div id="result-area"></div>
+  </div>
+</div>
+
+<script>
+  const BACKEND    = 'https://pixel-production-051a.up.railway.app';
+  const WS_BACKEND = 'wss://pixel-production-051a.up.railway.app';
+
+  /* ── Intro animation ── */
+  setTimeout(() => {
+    const intro = document.getElementById('intro');
+    intro.classList.add('fade-out');
+    setTimeout(() => {
+      intro.remove();
+      document.getElementById('app').classList.add('visible');
+    }, 700);
+  }, 2200);
+
+  /* ── Auto-resize textarea ── */
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+  }
+
+  /* ── File handling ── */
+  const attachedFiles = [];
+
+  function handleFiles(fileList) {
+    for (const f of fileList) attachedFiles.push(f);
+    renderChips();
+  }
+
+  function renderChips() {
+    const c = document.getElementById('file-chips');
+    if (!attachedFiles.length) { c.style.display = 'none'; return; }
+    c.style.display = 'flex';
+    c.innerHTML = attachedFiles.map((f, i) =>
+      `<div class="file-chip">${esc(f.name)}<button onclick="removeFile(${i})">×</button></div>`
+    ).join('');
+  }
+
+  function removeFile(i) {
+    attachedFiles.splice(i, 1);
+    renderChips();
+  }
+
+  /* ── DB selection ── */
+  let selectedDb = 'Supabase';
+  let pendingGoal = '';
+
+  function selectDb(el, db) {
+    document.querySelectorAll('.db-option').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDb = db;
+  }
+
+  /* ── Send → show clarification ── */
+  async function handleSend() {
+    let goal = document.getElementById('goal-input').value.trim();
+    if (!goal) return;
+
+    document.getElementById('send-btn').disabled = true;
+
+    if (attachedFiles.length) {
+      goal += '\n\n--- Attached context ---';
+      for (const f of attachedFiles) {
+        if (f.type.startsWith('image/')) {
+          goal += `\n[Image attached: ${f.name}]`;
+        } else {
+          try {
+            const txt = await f.text();
+            goal += `\n\n[File: ${f.name}]\n${txt.slice(0, 3000)}`;
+          } catch { goal += `\n[File: ${f.name}]`; }
+        }
+      }
+    }
+
+    pendingGoal = goal;
+    document.getElementById('input-card').style.display = 'none';
+    document.getElementById('clarify-card').style.display = 'block';
+  }
+
+  function goBack() {
+    document.getElementById('clarify-card').style.display = 'none';
+    document.getElementById('input-card').style.display = 'block';
+    document.getElementById('send-btn').disabled = false;
+  }
+
+  async function confirmAndBuild() {
+    const dbNote = selectedDb === 'none'
+      ? '\n\nDo not use any database — use in-memory or localStorage only.'
+      : `\n\nUse ${selectedDb} as the database.`;
+
+    const goal = pendingGoal + dbNote;
+
+    document.getElementById('clarify-card').style.display = 'none';
+    document.getElementById('log-card').style.display = 'block';
+
+    try {
+      const res = await fetch(`${BACKEND}/api/build`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ goal }),
+      });
+      const { sessionId } = await res.json();
+      connectWS(sessionId);
+    } catch {
+      showError('Could not reach Pixel backend (localhost:3001). Make sure it is running.');
+      document.getElementById('send-btn').disabled = false;
+    }
+  }
+
+  /* ── WebSocket ── */
+  function connectWS(sessionId) {
+    const ws = new WebSocket(`${WS_BACKEND}/ws`);
+    ws.onopen  = () => ws.send(JSON.stringify({ type: 'subscribe', sessionId }));
+    ws.onmessage = (e) => handleEvent(JSON.parse(e.data), ws);
+    ws.onerror   = () => pollStatus(sessionId);
+  }
+
+  function handleEvent(ev, ws) {
+    const { type, agent, message, data } = ev;
+
+    if (type === 'agent_thinking') {
+      addLog(agent, message.slice(0, 140) + (message.length > 140 ? '…' : ''), 'thinking');
+      return;
+    }
+    if (type === 'command_output') return;
+
+    if (type === 'agent_error') {
+      addLog(agent, message, 'error');
+      showError(message);
+      stopSpinner();
+      ws && ws.close();
+      return;
+    }
+
+    if (type === 'pipeline_complete') {
+      stopSpinner();
+      const url = data?.deployUrl || data?.url;
+      if (url && !url.startsWith('http://localhost')) showResult(url);
+      else showError('Build finished but no live URL — check deploy tokens in .env');
+      ws && ws.close();
+      return;
+    }
+
+    if (type === 'agent_complete' && agent === 'Deployer' && data?.url) {
+      if (!data.url.startsWith('http://localhost')) showResult(data.url);
+    }
+
+    if (['agent_start','agent_log','agent_complete','file_written'].includes(type)) {
+      addLog(agent || 'Pixel', message);
+    }
+  }
+
+  /* ── Log helpers ── */
+  function addLog(agent, msg, cls = '') {
+    const el = document.createElement('div');
+    el.className = 'log-entry';
+    el.innerHTML = `<span class="log-agent">${esc(agent)}</span><span class="log-msg ${cls}">${esc(msg)}</span>`;
+    const entries = document.getElementById('log-entries');
+    entries.appendChild(el);
+    entries.scrollTop = entries.scrollHeight;
+  }
+
+  function stopSpinner() {
+    document.getElementById('log-spinner').style.display = 'none';
+    document.getElementById('log-title').textContent = 'Build complete';
+  }
+
+  function showResult(url) {
+    stopSpinner();
+    document.getElementById('log-title').textContent = 'Build complete ✓';
+    document.getElementById('result-area').innerHTML = `
+      <div class="result-box">
+        <a class="result-url" href="${esc(url)}" target="_blank">${esc(url)}</a>
+        <a class="visit-btn" href="${esc(url)}" target="_blank">Visit →</a>
+      </div>
+      <button class="new-build-btn" onclick="resetUI()">+ New build</button>
+    `;
+  }
+
+  function showError(msg) {
+    document.getElementById('result-area').innerHTML += `
+      <div class="error-box">${esc(msg)}</div>
+      <button class="new-build-btn" onclick="resetUI()">+ Try again</button>
+    `;
+  }
+
+  function resetUI() {
+    document.getElementById('log-card').style.display = 'none';
+    document.getElementById('clarify-card').style.display = 'none';
+    document.getElementById('log-entries').innerHTML = '';
+    document.getElementById('result-area').innerHTML = '';
+    document.getElementById('log-spinner').style.display = 'block';
+    document.getElementById('log-title').textContent = 'Pixel is building…';
+    document.getElementById('input-card').style.display = 'block';
+    document.getElementById('goal-input').value = '';
+    document.getElementById('send-btn').disabled = false;
+    selectedDb = 'Supabase';
+    pendingGoal = '';
+    document.querySelectorAll('.db-option').forEach((b,i) => b.classList.toggle('selected', i === 0));
+    attachedFiles.length = 0;
+    renderChips();
+  }
+
+  /* ── Polling fallback ── */
+  function pollStatus(sessionId) {
+    const iv = setInterval(async () => {
+      try {
+        const d = await (await fetch(`${BACKEND}/api/status/${sessionId}`)).json();
+        if (d.status !== 'running') {
+          clearInterval(iv);
+          stopSpinner();
+          const url = d.result?.deployUrl;
+          url && !url.startsWith('http://localhost') ? showResult(url) : showError('No deploy URL returned');
+        }
+      } catch { clearInterval(iv); showError('Lost connection to backend'); }
+    }, 2500);
+  }
+
+  /* ── Utils ── */
+  function esc(s) {
+    return String(s ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('goal-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  });
+</script>
+</body>
+</html>
